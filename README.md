@@ -11,9 +11,8 @@ dilengkapi audit log, otentikasi kuat, dan dashboard admin untuk monitoring akti
 
 ## 🔧 Fitur tambahan
 ✨ Export data lengkap + audit trail  
-✨ Peringatan otomatis ke admin saat ada aktivitas mencurigakan  
 ✨ Multi-role user: admin, moderator, viewer  
-✨ Auto-backup data harian  
+
 
 ---
 
