@@ -1,59 +1,67 @@
 import jwt
 from datetime import datetime, timedelta
 from flask_bcrypt import Bcrypt
-from flask import current_app # Digunakan untuk mengakses app.config
-from models import db, User # Mengimpor db dan model User dari models.py
+from models import db, User
+from config import Config
 
-# Inisialisasi Bcrypt. Inisialisasi penuh akan dilakukan di app.py
 bcrypt = Bcrypt()
 
 def hash_password(password):
-    """Mengubah kata sandi plaintext menjadi hash Bcrypt."""
-    # .decode('utf-8') diperlukan karena generate_password_hash mengembalikan bytes
     return bcrypt.generate_password_hash(password).decode('utf-8')
 
 def check_password(hashed_password, password):
-    """Memverifikasi apakah kata sandi plaintext cocok dengan hash yang disimpan."""
     return bcrypt.check_password_hash(hashed_password, password)
 
 def generate_token(user_id, role):
-    """Membuat JSON Web Token (JWT) untuk pengguna."""
     payload = {
-        'exp': datetime.utcnow() + timedelta(hours=24), # Token kedaluwarsa dalam 24 jam
-        'iat': datetime.utcnow(), # Waktu pembuatan token
-        'sub': user_id, # Subjek (ID pengguna)
-        'role': role # Peran pengguna
+        'exp': datetime.utcnow() + timedelta(days=7),
+        'iat': datetime.utcnow(),
+        'sub': str(user_id),
+        'role': role
     }
-    # Menggunakan SECRET_KEY dari konfigurasi aplikasi
-    return jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256')
+    print("\n=== DEBUG ENCODE ===")
+    print(f"SECRET_KEY saat encode: '{Config.SECRET_KEY}'")
+    print(f"Payload yang akan di-encode: {payload}")
+
+    token = jwt.encode(payload, Config.SECRET_KEY, algorithm='HS256')
+
+    
+    if isinstance(token, bytes):
+        token = token.decode('utf-8')
+
+    print(f"Token yang dihasilkan: '{token}'")
+    print("=== END DEBUG ENCODE ===\n")
+    return token
 
 def decode_token(token):
-    """Mendekode JWT dan mengembalikan payload atau pesan kesalahan."""
+    print("\n=== DEBUG DECODE ===")
+    print(f"Token diterima untuk decode: '{token}'")
+    print(f"SECRET_KEY saat decode: '{Config.SECRET_KEY}'")
     try:
-        # Mendekode token menggunakan SECRET_KEY dan algoritma yang sama
-        payload = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
+        payload = jwt.decode(token, Config.SECRET_KEY, algorithms=['HS256'])
+        print(f"Hasil payload decode: {payload}")
+        print("=== END DEBUG DECODE ===\n")
         return payload
     except jwt.ExpiredSignatureError:
+        print("Token kadaluarsa.")
         return {'message': 'Token kadaluarsa. Silakan login kembali.'}
-    except jwt.InvalidTokenError:
+    except jwt.InvalidTokenError as e:
+        print(f"Token tidak valid: {str(e)}")
         return {'message': 'Token tidak valid. Autentikasi gagal.'}
     except Exception as e:
+        print(f"Terjadi kesalahan tak terduga: {str(e)}")
         return {'message': f'Terjadi kesalahan saat mendekode token: {str(e)}'}
 
 def register_user(username, email, password, role='viewer'):
-    """Mendaftarkan pengguna baru ke database."""
-    # Hash kata sandi sebelum menyimpannya
     hashed_password = hash_password(password)
     new_user = User(username=username, email=email, password_hash=hashed_password, role=role)
-    db.session.add(new_user) # Menambahkan pengguna ke sesi database
-    db.session.commit() # Menyimpan perubahan ke database
+    db.session.add(new_user)
+    db.session.commit()
     return new_user
 
 def login_user(username, password):
-    """Memverifikasi kredensial pengguna dan mengembalikan pengguna dan token JWT."""
-    user = User.query.filter_by(username=username).first() # Mencari pengguna berdasarkan username
+    user = User.query.filter_by(username=username).first()
     if user and check_password(user.password_hash, password):
-        # Jika pengguna ditemukan dan kata sandi cocok, buat token
         token = generate_token(user.id, user.role)
         return user, token
-    return None, None # Jika kredensial tidak valid
+    return None, None

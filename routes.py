@@ -154,7 +154,7 @@ def get_audit_logs(current_user):
         log_data = {
             'id': log.id,
             'user_id': log.user_id,
-            'username': log.user.username if log.user else 'N/A (User Deleted)', # Ambil username dari relasi
+            'username': log.user.username if log.user else 'N/A (User Deleted)', 
             'action': log.action,
             'timestamp': log.timestamp.isoformat() + 'Z',
             'details': log.details
@@ -165,26 +165,19 @@ def get_audit_logs(current_user):
 # --- Endpoint Simulasi Sinkronisasi Data ---
 
 @api_bp.route('/sync/google_forms', methods=['POST'])
-@roles_required(['admin', 'moderator']) # Admin dan moderator bisa melakukan sinkronisasi
+@roles_required(['admin', 'moderator']) 
 def sync_google_forms(current_user):
     """
     Endpoint placeholder untuk mensimulasikan sinkronisasi data dari Google Forms.
     Di sini Anda akan mengintegrasikan logika sebenarnya untuk memproses data.
     """
     data = request.get_json()
-    form_data = data.get('form_data') # Ini adalah contoh data yang diharapkan dari Google Forms
+    form_data = data.get('form_data') 
 
     if not form_data:
         return jsonify({'message': 'Tidak ada data Google Forms yang disediakan untuk disinkronkan.'}), 400
 
-    # --- Logika Simulasi Pemrosesan Data Google Forms ---
-    # Di sini Anda akan menambahkan logika untuk:
-    # 1. Validasi struktur form_data.
-    # 2. Mengubah form_data agar sesuai dengan skema database Anda (misalnya, tabel peserta).
-    # 3. Menyimpan data yang sudah diproses ke tabel database yang relevan (misalnya, tabel peserta).
-    # 4. Menangani data duplikat atau pembaruan data yang sudah ada.
-    # Contoh: Simpan ke tabel 'Participants' jika Anda memiliki model untuk itu.
-    # from models import Participant # Anda perlu membuat model Participant di models.py
+
 
     try:
         # Simulasi menyimpan data (misalnya, log saja)
@@ -193,11 +186,7 @@ def sync_google_forms(current_user):
         db.session.add(log)
         db.session.commit()
 
-        # Di sini Anda bisa mengimplementasikan logika untuk memicu peringatan otomatis
-        # Misalnya, jika ada anomali dalam data yang disinkronkan.
-        # if 'suspicious_field' in form_data:
-        #     # Kirim peringatan ke admin
-        #     pass
+      
 
         return jsonify({'message': 'Data Google Forms berhasil disinkronkan (simulasi). Log aktivitas dicatat.', 'received_data': form_data}), 200
     except Exception as e:

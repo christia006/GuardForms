@@ -1,8 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-# Membuat instance SQLAlchemy, namun belum diinisialisasi dengan aplikasi Flask.
-# Inisialisasi akan dilakukan di app.py
+
 db = SQLAlchemy()
 
 class User(db.Model):
@@ -28,8 +27,7 @@ class ActivityLog(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow) # Waktu aktivitas terjadi
     details = db.Column(db.Text, nullable=True) # Detail lebih lanjut tentang aktivitas (misal: 'Peserta ID 123 diubah')
 
-    # Mendefinisikan relasi dengan model User.
-    # backref='activity_logs' memungkinkan Anda mengakses log dari objek User: user.activity_logs
+   
     user = db.relationship('User', backref='activity_logs')
 
     def __repr__(self):
