@@ -33,3 +33,38 @@ dilengkapi audit log, otentikasi kuat, dan dashboard admin untuk monitoring akti
 ![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white)
 ![Postman](https://img.shields.io/badge/Postman-FF6C37?logo=postman&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?logo=github-actions&logoColor=white)
+
+
+
+---
+
+## 📸 Urutan Pengujian Postman
+
+1. **Registrasi Pengguna Baru**
+   ![Registrasi Pengguna Baru](images/Registrasi%20Pengguna%20Baru.png)
+
+2. **Login Pengguna**
+   ![Login Pengguna](images/Login%20Pengguna.png)
+
+3. **Dashboard**
+   ![Dashboard](images/Dashboard.png)
+
+4. **Melihat Daftar Pengguna**
+   ![Melihat Daftar Pengguna](images/Melihat%20Daftar%20Pengguna.png)
+
+5. **Melihat Audit Log**
+   ![Melihat Audit Log](images/Melihat%20Audit%20Log.png)
+
+6. **Sinkronisasi Google Forms**
+   ![Sinkronisasi Google Forms](images/Sinkronisasi%20Google%20Forms.png)
+
+7. **Encode dan Decode Token**
+   ![Encode dan Decode Token](images/encode%20dan%20decode%20token.png)
+
+8. **Run Project**
+   ![Run](images/run.png)
+
+---
+
+✅ Semua pengujian dilakukan menggunakan Postman dan hasilnya disimpan sebagai bukti dokumentasi.
+
